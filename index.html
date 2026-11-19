@@ -40,7 +40,10 @@ input{font:inherit;width:100%;padding:8px;border:1px solid var(--ln);border-radi
 <nav id="nav"></nav><main id="app"></main><div class="st" id="st"></div>
 <script>
 // Paste the Apps Script (…/exec) URL here, or use the box at the bottom of the page on first open.
-var API='https://script.google.com/macros/s/AKfycbwL5ZvhqmKG2XtWlx1iax-kcqWniVDZl-sbaPscbvkk-8RH0gDnwk6zrj-T2w0QrXhd3A/exec';
+var API='';
+// Fallback links so the buttons always show (even before data loads). These are public in the repo.
+var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSeDT3EsEDm568OPaXU1KHQhguKfjx9x8cRaI--M-lYugTC9Yw/viewform';
+var SHEET_URL='https://docs.google.com/spreadsheets/d/11iv-f5B4UIS1smcuGiHlPNG-2OUeNUgdm-xEv95y1Ic/edit';
 var KEY='trip_api_url',tab='sum',cur=null,D=null,demo=false;
 var DEMO={set:{n1:'Enni',n2:'Ulfah'},
 it:[['2027-02-07','9:10 AM','10:00 AM','Landing, immigration','Changi Airport Terminal 3','OTW','Fill in SG Arrival Card','','','',''],['2027-02-07','10:00 AM','11:15 AM','Rain Vortex & Forest Valley','Jewel Changi Airport','Excursion','CNY crowds likely','walk','','',''],['2027-02-08','8:00 AM','8:15 AM','Photo stop at 0 KM','0 KM Johor Bahru','Excursion','','','','',''],['2027-02-08','1:00 PM','6:00 PM','Bus Johor Bahru – Kuala Lumpur','Larkin Sentral → KL','OTW','About 5 hours','bus','','',''],['2027-02-09','8:30 AM','10:30 AM','Trekking (5 km)','Taman Tugu','Excursion','','','','','']],
@@ -80,8 +83,9 @@ function uniq(a){return a.filter(function(x,i){return x&&a.indexOf(x)==i})}
 var TABS=[['sum','Summary'],['it','Itinerary'],['acc','Accommodation'],['pay','Spending']];
 function lk(){var L=(D&&D.links)||{},h='';
 function ok(u){return /^https:\/\//.test(u||'')}
-if(ok(L.form))h+='<a href="'+esc(L.form)+'" target="_blank" rel="noopener">+ Add payment</a>';
-if(ok(L.sheet))h+='<a class="g" href="'+esc(L.sheet)+'" target="_blank" rel="noopener">Open Google Sheet</a>';
+var fu=L.form||FORM_URL,su=L.sheet||SHEET_URL;
+if(ok(fu))h+='<a href="'+esc(fu)+'" target="_blank" rel="noopener">+ Add payment</a>';
+if(ok(su))h+='<a class="g" href="'+esc(su)+'" target="_blank" rel="noopener">Edit master data (Google Sheet)</a>';
 return h?'<div class="links">'+h+'</div>':''}
 function render(){if(!D)return;$('nav').innerHTML=TABS.map(function(t){return '<button class="'+(t[0]==tab?'on':'')+'" onclick="tab=\''+t[0]+'\';render()">'+t[1]+'</button>'}).join('');
 var h=lk()+V[tab]();if(demo)h+='<div class="card"><b>Connect to your Google Sheet</b><div class="mut">Paste the Apps Script web app URL (ending in /exec):</div><input id="u" placeholder="https://script.google.com/macros/s/…/exec"><button class="b" onclick="setU()">Save & load</button></div>';$('app').innerHTML=h}
