@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trip SG · JB · KL — 7–9 Feb 2027</title>
+<style>
+:root{--bg:#eef3f2;--sf:#fff;--ink:#16302e;--mut:#5d7471;--ln:#d5e0de;--pri:#0f6a70;--acc:#c8364a;--ok:#2d8a5b;--warn:#b7791f;--soft:#e2eeed}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1b1a;--sf:#172625;--ink:#e6f0ee;--mut:#8fa8a5;--ln:#294140;--pri:#4fc1c8;--acc:#ff7b8c;--ok:#5fcf98;--warn:#e8b45a;--soft:#1f3534}}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "Avenir Next","Segoe UI",system-ui,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+header{background:var(--pri);color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 12px}
+header h1{margin:0;font-size:22px;letter-spacing:-.3px}
+header p{margin:3px 0 0;font-size:13px;opacity:.88}
+nav{display:flex;background:var(--pri);position:sticky;top:0;z-index:5;overflow-x:auto}
+nav button{flex:1;background:none;border:0;color:#fff;opacity:.7;padding:11px 10px;font:inherit;font-weight:600;border-bottom:3px solid transparent;white-space:nowrap;cursor:pointer}
+nav button.on{opacity:1;border-color:#fff}
+main{max-width:860px;margin:0 auto;padding:14px 14px 60px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px;margin-bottom:12px}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:12px}
+.grid .card{margin:0}.big{font-size:22px;font-weight:700;letter-spacing:-.4px}.mut{color:var(--mut);font-size:13px}
+h2{font-size:17px;margin:20px 0 8px}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--pri)}.bar.over i{background:var(--acc)}
+.settle{border-left:5px solid var(--acc)}
+.days{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto}
+.days button{background:var(--soft);color:var(--ink);border:0;border-radius:8px;padding:8px 12px;font:inherit;font-weight:600;white-space:nowrap;cursor:pointer}
+.days button.on{background:var(--pri);color:#fff}
+.ev{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:10px 0;border-bottom:1px dashed var(--ln)}
+.ev:last-child{border:0}.ev .t{color:var(--pri);font-weight:600;font-size:13px}.ev .t span{display:block;color:var(--mut);font-weight:400}
+.ev b{font-weight:600}.ev .l{color:var(--mut);font-size:13px}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;background:var(--soft);margin-right:4px}
+.tag.Localtransport{color:var(--warn)}.tag.Attractions{color:var(--pri)}.tag.Shoppingsouvenirs{color:var(--acc)}.tag.Flights{color:var(--pri)}.tag.Fooddrinks{color:var(--ok)}
+.tag.ok{color:var(--ok)}.tag.wr{color:var(--warn)}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--ln)}.row:last-child{border:0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.links{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.links a{flex:1;min-width:140px;text-align:center;text-decoration:none;font-weight:600;padding:10px 12px;border-radius:8px;background:var(--pri);color:#fff}.links a.g{background:var(--soft);color:var(--ink)}
+.st{font-size:12px;color:var(--mut);text-align:center;padding:10px}
+button.b{background:var(--pri);color:#fff;border:0;border-radius:6px;padding:8px 12px;font:inherit;font-weight:600;cursor:pointer}
+input{font:inherit;width:100%;padding:8px;border:1px solid var(--ln);border-radius:6px;background:var(--bg);color:var(--ink);margin:6px 0}
+</style></head><body>
+<header><h1>Jakarta → Singapore → Johor Bahru → Kuala Lumpur</h1><p id="sub">7–9 Feb 2027</p></header>
+<nav id="nav"></nav><main id="app"></main><div class="st" id="st"></div>
+<script>
+// Paste the Apps Script (…/exec) URL here, or use the box at the bottom of the page on first open.
+var API='';
+var KEY='trip_api_url',tab='sum',cur=null,D=null,demo=false;
+var DEMO={set:{n1:'Enni',n2:'Ulfah'},
+it:[['2027-02-07','9:10 AM','10:00 AM','Landing, immigration','Changi Airport Terminal 3','OTW','Fill in SG Arrival Card','','','',''],['2027-02-07','10:00 AM','11:15 AM','Rain Vortex & Forest Valley','Jewel Changi Airport','Excursion','CNY crowds likely','walk','','',''],['2027-02-08','8:00 AM','8:15 AM','Photo stop at 0 KM','0 KM Johor Bahru','Excursion','','','','',''],['2027-02-08','1:00 PM','6:00 PM','Bus Johor Bahru – Kuala Lumpur','Larkin Sentral → KL','OTW','About 5 hours','bus','','',''],['2027-02-09','8:30 AM','10:30 AM','Trekking (5 km)','Taman Tugu','Excursion','','','','','']],
+acc:[['Hotel CIQ @ Hong Ah Fook','Johor Bahru','2027-02-07','2027-02-08',1,464400,'Booked','Paid'],['(KL hotel)','Kuala Lumpur','2027-02-08','2027-02-09',1,700000,'Not booked yet','Estimate']],
+pay:[['2027-01-01','Citilink CGK–SIN','Flights',484000,'IDR','Enni','50:50',484000,242000,242000],['2027-01-01','Citilink KUL–CGK','Flights',1066000,'IDR','Enni','50:50',1066000,533000,533000],['2027-01-01','Hotel CIQ JB','Accommodation',464400,'IDR','Ulfah','50:50',464400,232200,232200]],
+bud:[['Flights',1550000],['Accommodation',1200000],['Local transport',1300000],['Food & drinks',1600000]]};
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fm(n){return 'Rp '+Math.round(n).toLocaleString('en-US')}
+function dt(s,o){return new Date(s+'T00:00:00').toLocaleDateString('en-US',o)}
+function url(){try{return API||localStorage.getItem(KEY)||''}catch(e){return API}}
+function load(){var u=url();if(!u){demo=true;D=DEMO;draw('Demo mode. Paste your Apps Script URL below to use real data.');return}
+demo=false;$('st').textContent='Loading…';
+fetch(u).then(function(r){return r.json()}).then(function(j){if(j.error)throw new Error(j.error);D=j;draw('Updated '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})+' · auto-refresh every 30s')}).catch(function(e){if(!D){D=DEMO;demo=true}draw('Could not load data ('+e.message+'). Showing last known/demo data.')})}
+function calc(){var n1=D.set.n1,n2=D.set.n2,t={tot:0,p1:0,p2:0,s1:0,s2:0,cat:{},list:[]};
+D.pay.forEach(function(p){if(!p[1]||p[7]===''||p[7]==null)return;var v=+p[7];t.tot+=v;if(p[5]==n1)t.p1+=v;else t.p2+=v;t.s1+=+p[8]||0;t.s2+=+p[9]||0;t.cat[p[2]]=(t.cat[p[2]]||0)+v;t.list.push(p)});
+t.bal=t.p1-t.s1;t.bt=D.bud.reduce(function(s,b){return s+(+b[1]||0)},0);return t}
+var V={
+sum:function(){var t=calc(),n1=D.set.n1,n2=D.set.n2,rest=t.bt-t.tot,pct=t.bt?Math.min(100,t.tot/t.bt*100):0;
+var s=Math.abs(t.bal)<1?'All settled':t.bal>0?n2+' pays '+n1+' '+fm(t.bal):n1+' pays '+n2+' '+fm(-t.bal);
+var h='<div class="grid"><div class="card"><div class="mut">Budget</div><div class="big">'+fm(t.bt)+'</div></div><div class="card"><div class="mut">Spent</div><div class="big">'+fm(t.tot)+'</div><div class="bar '+(t.tot>t.bt?'over':'')+'"><i style="width:'+pct+'%"></i></div></div><div class="card"><div class="mut">'+(rest>=0?'Remaining':'Over budget')+'</div><div class="big" style="color:'+(rest>=0?'var(--ok)':'var(--acc)')+'">'+fm(Math.abs(rest))+'</div></div></div>';
+h+='<div class="card settle"><div class="mut">Settlement</div><div class="big" style="font-size:18px">'+esc(s)+'</div><div class="mut" style="margin-top:6px">'+esc(n1)+': paid '+fm(t.p1)+', share '+fm(t.s1)+' · '+esc(n2)+': paid '+fm(t.p2)+', share '+fm(t.s2)+'</div></div>';
+var days=uniq(D.it.map(function(r){return r[0]}));var st=D.acc.filter(function(a){return a[0]});
+h+='<h2>Accommodation status</h2><div class="card">'+st.map(function(a){return '<div class="row"><span><b>'+esc(a[0])+'</b><br><span class="mut">'+esc(a[1])+' · '+(a[2]?dt(a[2],{day:'numeric',month:'short'}):'')+'</span></span><span class="tag '+(a[6]=='Booked'?'ok':'wr')+'">'+esc(a[6])+'</span></div>'}).join('')+'</div>';
+h+='<div class="note"><b>Chinese New Year:</b> 6 Feb 2027 is CNY. Woodlands–JB immigration queues and JB–KL buses may be busier, so add time buffers and buy bus tickets early.</div>';return h},
+it:function(){var days=uniq(D.it.map(function(r){return r[0]}));if(!cur||days.indexOf(cur)<0){var td=new Date().toISOString().slice(0,10);cur=days.indexOf(td)>=0?td:days[0]}
+var h='<div class="days">'+days.map(function(d,i){return '<button class="'+(d==cur?'on':'')+'" onclick="cur=\''+d+'\';render()">Day '+(i+1)+' · '+dt(d,{weekday:'short',day:'numeric',month:'short'})+'</button>'}).join('')+'</div><div class="card">';
+D.it.filter(function(r){return r[0]==cur}).forEach(function(r){var c=r[5]||'';var cost=[r[8]?fm(r[8]):'',r[9]?'SGD '+r[9]:'',r[10]?'MYR '+r[10]:''].filter(String).join(' · ');
+h+='<div class="ev"><div class="t">'+esc(r[1])+'<span>'+(r[2]?'until '+esc(r[2]):'')+'</span></div><div><b>'+esc(r[3])+'</b><div class="l">'+esc(r[4])+'</div><div style="margin-top:3px">'+(c?'<span class="tag '+c.replace(/[^a-z]/gi,'')+'">'+esc(c)+'</span>':'')+(r[7]?'<span class="tag">'+esc(r[7])+'</span>':'')+(cost?'<span class="mut">'+esc(cost)+'</span>':'')+'</div>'+(r[6]?'<div class="mut">'+esc(r[6])+'</div>':'')+'</div></div>'});return h+'</div>'},
+acc:function(){return D.acc.filter(function(a){return a[0]}).map(function(a){return '<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+esc(a[0])+'</b><span class="tag '+(a[6]=='Booked'?'ok':'wr')+'">'+esc(a[6])+'</span></div><div class="mut">'+esc(a[1])+'</div><div style="margin-top:6px">'+(a[2]?dt(a[2],{day:'numeric',month:'short'}):'?')+' → '+(a[3]?dt(a[3],{day:'numeric',month:'short'}):'?')+(a[4]?' · '+a[4]+' nights':'')+'</div><div class="big" style="font-size:18px;margin-top:4px">'+fm(a[5]||0)+'</div>'+(a[7]?'<div class="mut">'+esc(a[7])+'</div>':'')+'</div>'}).join('')},
+pay:function(){var t=calc(),h='<h2 style="margin-top:0">Budget vs actual</h2>';
+D.bud.forEach(function(b){if(!b[0])return;var r=t.cat[b[0]]||0,a=+b[1]||0;h+='<div class="card"><div class="row" style="border:0;padding:0"><b>'+esc(b[0])+'</b><span class="mut">'+fm(r)+' / '+fm(a)+'</span></div><div class="bar '+(r>a?'over':'')+'"><i style="width:'+Math.min(100,a?r/a*100:0)+'%"></i></div></div>'});
+h+='<h2>Latest payments</h2><div class="card">';
+if(!t.list.length)h+='<div class="mut">No payments yet.</div>';
+t.list.slice().reverse().forEach(function(p){h+='<div class="row"><span><b>'+esc(p[1])+'</b><br><span class="mut">'+(p[0]?dt(p[0],{day:'numeric',month:'short'}):'')+' · '+esc(p[2])+' · '+esc(p[5])+' paid · '+esc(p[6])+'</span></span><span style="text-align:right;white-space:nowrap">'+fm(p[7])+(p[4]!='IDR'?'<br><span class="mut">'+esc(p[4])+' '+p[3]+'</span>':'')+'</span></div>'});return h+'</div>'}};
+function uniq(a){return a.filter(function(x,i){return x&&a.indexOf(x)==i})}
+var TABS=[['sum','Summary'],['it','Itinerary'],['acc','Accommodation'],['pay','Spending']];
+function lk(){var L=(D&&D.links)||{},h='';
+function ok(u){return /^https:\/\//.test(u||'')}
+if(ok(L.form))h+='<a href="'+esc(L.form)+'" target="_blank" rel="noopener">+ Add payment</a>';
+if(ok(L.sheet))h+='<a class="g" href="'+esc(L.sheet)+'" target="_blank" rel="noopener">Open Google Sheet</a>';
+return h?'<div class="links">'+h+'</div>':''}
+function render(){if(!D)return;$('nav').innerHTML=TABS.map(function(t){return '<button class="'+(t[0]==tab?'on':'')+'" onclick="tab=\''+t[0]+'\';render()">'+t[1]+'</button>'}).join('');
+var h=lk()+V[tab]();if(demo)h+='<div class="card"><b>Connect to your Google Sheet</b><div class="mut">Paste the Apps Script web app URL (ending in /exec):</div><input id="u" placeholder="https://script.google.com/macros/s/…/exec"><button class="b" onclick="setU()">Save & load</button></div>';$('app').innerHTML=h}
+function draw(m){var d0=new Date('2027-02-07T00:00:00'),n=Math.ceil((d0-new Date())/864e5);$('sub').textContent='7–9 Feb 2027 · 2 pax · '+(n>0?'H-'+n:n>-3?'in progress':'finished');$('st').textContent=m;render()}
+function setU(){var v=$('u').value.trim();if(!v)return;try{localStorage.setItem(KEY,v)}catch(e){}API=v;load()}
+load();setInterval(function(){if(!demo)load()},30000);
+</script></body></html>
